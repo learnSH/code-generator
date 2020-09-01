@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ricky.project.mapper.SysDataSourceMapper">
+
+	<resultMap type="SysDataSource" id="SysDataSourceResult">
+		<id     property="dataId"     column="data_id"     />
+		<result property="name"   column="name"   />
+		<result property="driver"   column="driver"   />
+		<result property="oracleConnMode"   column="oracle_conn_mode"   />
+		<result property="serviceNameOrSid"   column="service_name_or_sid"   />
+		<result property="host"     column="host"      />
+		<result property="port"   column="port"   />
+		<result property="username"   column="username"   />
+		<result property="password"   column="password"   />
+	</resultMap>
+	
+	<sql id="selectSysDataSourceVo">
+        select data_id, name, driver, oracle_conn_mode, service_name_or_sid, host, port, username, password
+		from sys_data_source
+    </sql>
+
+	<select id="selectSysDataSource" resultMap="SysDataSourceResult">
+	    <include refid="selectSysDataSourceVo"/>
+	</select>
+	
+    <insert id="insertSysDataSource" parameterType="SysDataSource">
+        insert into sys_data_source(
+            <if test="name != null and name != ''">name,</if>
+            <if test="driver != null and driver != ''">driver ,</if>
+            <if test="oracleConnMode != null and oracleConnMode != ''">oracle_conn_mode,</if>
+            <if test="serviceNameOrSid != null and serviceNameOrSid != ''">service_name_or_sid,</if>
+            <if test="host != null and host != ''">host,</if>
+            <if test="port != null and port != ''">port,</if>
+            <if test="username != null and username != ''">username,</if>
+            <if test="password != null">password</if>
+        )values(
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="driver != null and driver != ''">#{driver},</if>
+            <if test="oracleConnMode != null and oracleConnMode != ''">#{oracleConnMode},</if>
+            <if test="serviceNameOrSid != null and serviceNameOrSid != ''">#{serviceNameOrSid},</if>
+            <if test="host != null and host != ''">#{host},</if>
+            <if test="port != null and port != ''">#{port},</if>
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="password != null">#{password}</if>
+        )
+    </insert>
+    
+	<update id="updateSysDataSource" parameterType="SysDataSource">
+        update sys_data_source
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="driver != null and driver != ''">driver = #{driver},</if>
+            <if test="oracleConnMode != null and oracleConnMode != ''">oracle_conn_mode = #{oracleConnMode},</if>
+            <if test="serviceNameOrSid != null and serviceNameOrSid != ''">service_name_or_sid = #{serviceNameOrSid},</if>
+            <if test="host != null and host != ''">host = #{host},</if>
+            <if test="port != null and port != ''">port = #{port},</if>
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+        </set>
+        where data_id = #{dataId}
+    </update>
+</mapper> 
