@@ -46,6 +46,7 @@
 		        removeUrl: prefix + "/remove",
 		        exportUrl: prefix + "/export",
 		        singleSelect: true,
+		        queryParams: queryParams,
 		        clickToSelect: true,
 		        showSearch: false,
 	            showRefresh: false,
@@ -92,6 +93,11 @@
 		    };
 		    $.table.init(options);
 		});
+		function queryParams(params) {
+			var search = $.table.queryParams(params);
+			search.status = '0';//只查询正常的数据源
+			return search;
+		}
 		function getSelections(){
 	    	return $.table.selectColumns("id");
 	    }

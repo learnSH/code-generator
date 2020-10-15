@@ -7,7 +7,7 @@ spring:
             # 主库数据源
             master:
                 # 发布后
-                #url: jdbc:sqlite:./sqlite/code-generator.db
+                # url: jdbc:sqlite:./sqlite/code-generator.db
                 # 开发时
                 url: jdbc:sqlite::resource:static/sqlite/code-generator.db
                 username: root
