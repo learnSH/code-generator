@@ -9,9 +9,9 @@
 #### 项目说明
 1. 代码参考若依管理系统
 2. 数据库采用sqlite，位置在src\main\resources\static\sqlite\code-generator.db，发布后请将db文件放在jar包的同级sqlite目录中
-3. 目前目标数据库只支持MySql、Oracle,其他的可自行扩展
-4. 目前数据源只允许设置一个，可自行扩展
-5. 工具目录中tools文件是jar文件，只是改了个名字，可以直接运行jar，但是关闭服务时候需要去服务进程中找，因此去掉.jar，防止误点击，只允许.bat启动
+3. 目前目标数据库只支持MySQL、Oracle、PostgreSQL、SQLServer其他的可自行扩展
+4. 数据源可多条配置，导入表结构时进行选择数据源
+5. 工具目录中tools文件是jar文件，只是改了个名字，双击.bat启动
 
 #### 工具下载
 https://gitee.com/lpf_project/code-generator/releases/v1.0
