@@ -14,7 +14,7 @@
 5. 工具目录中tools文件是jar文件，只是改了个名字，双击.bat启动
 
 #### 工具下载
-https://gitee.com/lpf_project/code-generator/releases/v1.0
+https://gitee.com/lpf_project/code-generator/releases/v2.0
 
 #### 运行说明
 
