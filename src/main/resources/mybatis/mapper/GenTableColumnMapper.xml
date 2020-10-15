@@ -39,35 +39,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by sort
     </select>
     
-    <!-- MySql数据库 -->
-    <select id="selectMySqlDbTableColumnsByName" parameterType="String" resultMap="GenTableColumnResult">
-		select column_name, (case when (is_nullable = 'no' <![CDATA[ && ]]> column_key != 'PRI') then '1' else null end) as is_required, (case when column_key = 'PRI' then '1' else '0' end) as is_pk, ordinal_position as sort, column_comment, (case when extra = 'auto_increment' then '1' else '0' end) as is_increment, column_type
-		from information_schema.columns where table_schema = (select database()) and table_name = (#{tableName})
-		order by ordinal_position
-	</select>
-    
-    <!-- Oracle数据库 -->
-    <select id="selectOracleDbTableColumnsByName" parameterType="String" resultMap="GenTableColumnResult">
-		 select lower(temp.column_name) as column_name,
-                (case when (temp.nullable = 'N'  and  temp.constraint_type != 'P') then '1' else null end) as is_required,
-                (case when temp.constraint_type = 'P' then '1' else '0' end) as is_pk,
-                temp.column_id as sort,
-                temp.comments as column_comment,
-                (case when temp.constraint_type = 'P' then '1' else '0' end) as is_increment,
-                lower(temp.data_type) as column_type
-           from (
-                  select col.column_id, col.column_name,col.nullable, col.data_type, colc.comments, uc.constraint_type
-                       , row_number() over (partition by col.column_name order by uc.constraint_type desc) as row_flg
-                  from user_tab_columns col
-                  left join user_col_comments colc on colc.table_name = col.table_name and colc.column_name = col.column_name
-                  left join user_cons_columns ucc on ucc.table_name = col.table_name and ucc.column_name = col.column_name
-                  left join user_constraints uc on uc.constraint_name = ucc.constraint_name
-                 where col.table_name = upper(#{tableName})
-                  ) temp
-           WHERE temp.row_flg = 1
-          ORDER BY temp.column_id
-	</select>
-    
     <insert id="insertGenTableColumn" parameterType="GenTableColumn" useGeneratedKeys="true" keyProperty="columnId">
         insert into gen_table_column (
 			<if test="tableId != null and tableId != ''">table_id,</if>
@@ -108,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="dictType != null and dictType != ''">#{dictType},</if>
 			<if test="sort != null">#{sort},</if>
 			<if test="createBy != null and createBy != ''">#{createBy},</if>
-			strftime('%Y-%m-%d %H:%M:%S', 'now')
+			strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime')
          )
     </insert>
 	 
@@ -128,7 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             dict_type = #{dictType},
             sort = #{sort},
             update_by = #{updateBy},
-            update_time = strftime('%Y-%m-%d %H:%M:%S', 'now')
+            update_time = strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime')
         </set>
         where column_id = #{columnId}
     </update>

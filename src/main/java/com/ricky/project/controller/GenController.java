@@ -27,10 +27,8 @@ import com.ricky.framework.web.domain.CxSelect;
 import com.ricky.framework.web.page.TableDataInfo;
 import com.ricky.project.domain.GenTable;
 import com.ricky.project.domain.GenTableColumn;
-import com.ricky.project.domain.SysDataSource;
 import com.ricky.project.service.IGenTableColumnService;
 import com.ricky.project.service.IGenTableService;
-import com.ricky.project.service.ISysDataSourceService;
 
 /**
  * 代码生成 操作处理
@@ -48,9 +46,6 @@ public class GenController extends BaseController
 
     @Autowired
     private IGenTableColumnService genTableColumnService;
-
-    @Autowired
-    private ISysDataSourceService sysDataSourceService;
     
     @GetMapping()
     public String gen()
@@ -77,9 +72,8 @@ public class GenController extends BaseController
     @ResponseBody
     public TableDataInfo dataList(GenTable genTable)
     {
-    	SysDataSource dataSource = sysDataSourceService.selectSysDataSource();
         startPage();
-        List<GenTable> list = genTableService.selectDbTableList(genTable,dataSource.getDriver());
+        List<GenTable> list = genTableService.selectDbTableList(genTable);
         return getDataTable(list);
     }
 
@@ -100,13 +94,10 @@ public class GenController extends BaseController
     /**
      * 导入表结构
      */
-    @GetMapping("/importTable")
-    public String importTable()
+    @GetMapping("/importTable/{dataSourceId}")
+    public String importTable(@PathVariable("dataSourceId") Long id,ModelMap mmap)
     {
-    	SysDataSource dataSource = sysDataSourceService.selectSysDataSource();
-    	if (dataSource == null) {
-    		return prefix + "/dataSourceError";
-		}
+    	mmap.put("dataSourceId", id);
         return prefix + "/importTable";
     }
 
@@ -115,13 +106,12 @@ public class GenController extends BaseController
      */
     @PostMapping("/importTable")
     @ResponseBody
-    public AjaxResult importTableSave(String tables)
+    public AjaxResult importTableSave(String tables, Long dataSourceId)
     {
         String[] tableNames = Convert.toStrArray(tables);
-        SysDataSource dataSource = sysDataSourceService.selectSysDataSource();
         // 查询表信息
-        List<GenTable> tableList = genTableService.selectDbTableListByNames(tableNames,dataSource.getDriver());
-        genTableService.importGenTable(tableList);
+        List<GenTable> tableList = genTableService.selectDbTableListByNames(tableNames, dataSourceId);
+        genTableService.importGenTable(tableList, dataSourceId);
         return AjaxResult.success();
     }
 
@@ -199,12 +189,23 @@ public class GenController extends BaseController
      */
     @GetMapping("/genCode/{tableName}")
     @ResponseBody
-    public AjaxResult genCode(HttpServletResponse response, @PathVariable("tableName") String tableName)
+    public AjaxResult genCode(@PathVariable("tableName") String tableName)
     {
         genTableService.generatorCode(tableName);
         return AjaxResult.success();
     }
 
+    /**
+     * 同步数据库
+     */
+    @GetMapping("/synchDb/{tableName}")
+    @ResponseBody
+    public AjaxResult synchDb(@PathVariable("tableName") String tableName)
+    {
+        genTableService.synchDb(tableName);
+        return AjaxResult.success();
+    }
+    
     /**
      * 批量生成代码
      */

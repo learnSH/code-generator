@@ -1,4 +1,4 @@
-package ${packageName}.${businessName}.controller;
+package ${packageName}.controller;
 
 import java.util.List;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.ruoyi.framework.aspectj.lang.annotation.Log;
-import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
-import ${packageName}.${businessName}.domain.${ClassName};
-import ${packageName}.${businessName}.service.I${ClassName}Service;
-import com.ruoyi.framework.web.controller.BaseController;
-import com.ruoyi.framework.web.domain.AjaxResult;
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.enums.BusinessType;
+import ${packageName}.domain.${ClassName};
+import ${packageName}.service.I${ClassName}Service;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 #if($table.crud || $table.sub)
-import com.ruoyi.framework.web.page.TableDataInfo;
+import com.ruoyi.common.core.page.TableDataInfo;
 #elseif($table.tree)
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.framework.web.domain.Ztree;
+import com.ruoyi.common.core.domain.Ztree;
 #end
 
 /**

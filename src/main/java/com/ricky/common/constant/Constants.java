@@ -69,17 +69,20 @@ public class Constants
     /** 字典正常状态 */
     public static final String DICT_NORMAL = "0";
     
-    /** 数据库类型-MySql */
-    public static final String DATABASE_DRIVER_MYSQL = "mysql";
+    /** 数据库类型-MySQL */
+    public static final String DATABASE_TYPE_MYSQL = "mysql";
     
     /** 数据库类型-Oracle */
-    public static final String DATABASE_DRIVER_ORACLE = "oracle";
+    public static final String DATABASE_TYPE_ORACLE = "oracle";
     
-    /** MySql数据库驱动 */
-    public static final String DRIVER_CLASS_NAME_MYSQL = "com.mysql.cj.jdbc.Driver";
+    /** 数据库类型-PostgreSQL */
+    public static final String DATABASE_TYPE_POSTGRESQL = "pgsql";
     
-    /** Oracle数据库驱动 */
-    public static final String DRIVER_CLASS_NAME_ORACLE = "oracle.jdbc.driver.OracleDriver";
+    /** 数据库类型-DB2 */
+    public static final String DATABASE_TYPE_DB2 = "db2";
+    
+    /** 数据库类型-SQL Server */
+    public static final String DATABASE_TYPE_SQLSERVER = "sqlserver";
     
     /** Oracle数据库连接类型-SID */
     public static final String ORACLE_CONN_TYPE_SID = "sid";

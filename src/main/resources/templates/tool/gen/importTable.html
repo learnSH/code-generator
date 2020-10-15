@@ -7,6 +7,7 @@
     <div class="container-div">
 		<div class="row">
 			<div class="col-sm-12 search-collapse">
+				<input id="dataSourceId" name="dataSourceId" type="hidden" th:value="${dataSourceId}" />
 				<form id="gen-form">
 					<div class="select-list">
 						<ul>
@@ -26,17 +27,18 @@
 			</div>
 			
 		    <div class="col-sm-12 select-table table-striped">
-			    <table id="bootstrap-table" data-mobile-responsive="true"></table>
+			    <table id="bootstrap-table"></table>
 			</div>
 		</div>
 	</div>
 	<th:block th:include="include :: footer" />
 	<script type="text/javascript">
 		var prefix = ctx + "tool/gen";
-	
+
 		$(function() {
 		    var options = {
 		        url: prefix + "/db/list",
+		        queryParams: queryParams,
 		        sortName: "createTime",
 		        sortOrder: "desc",
 		        showSearch: false,
@@ -85,7 +87,11 @@
 		    };
 		    $.table.init(options);
 		});
-		
+		function queryParams(params) {
+			var search = $.table.queryParams(params);
+			search.dataSourceId = $("#dataSourceId").val();
+			return search;
+		}
 		/* 导入表结构-选择表结构-提交 */
 		function submitHandler() {
 			var rows = $.table.selectColumns("tableName");
@@ -93,7 +99,7 @@
        			$.modal.alertWarning("请至少选择一条记录");
        			return;
        		}
-			var data = {"tables": rows.join()};
+			var data = {"tables": rows.join(),"dataSourceId": $("#dataSourceId").val()};
 			$.operate.save(prefix + "/importTable", data);
 		}
 	</script>

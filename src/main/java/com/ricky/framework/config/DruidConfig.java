@@ -20,8 +20,10 @@ import org.sqlite.SQLiteDataSource;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.ricky.common.utils.DataSourceComposeUtils;
+import com.ricky.common.utils.text.Convert;
 import com.ricky.framework.aspectj.lang.enums.DataSourceType;
 import com.ricky.framework.datasource.DynamicDataSource;
+import com.ricky.framework.datasource.DynamicDataSourceUtil;
 import com.ricky.project.domain.SysDataSource;
 
 /**
@@ -44,7 +46,7 @@ public class DruidConfig {
 
 	@Bean(name = "dynamicDataSource")
 	@Primary
-	public DynamicDataSource dataSource(DataSource masterDataSource, DataSource slaveDataSource) {
+	public DynamicDataSource dataSource(DataSource masterDataSource) {
 		Map<Object, Object> targetDataSources = new HashMap<>();
 		targetDataSources.put(DataSourceType.MASTER.name(), masterDataSource);
 		// 从数据库中直接读取数据库
@@ -52,9 +54,12 @@ public class DruidConfig {
 		List<SysDataSource> dsList = jdbcTemplate.query("select * from sys_data_source", new Object[] {},
 				new BeanPropertyRowMapper<SysDataSource>(SysDataSource.class));
 		if (dsList != null && dsList.size() > 0) {
-			DruidDataSource dds = DataSourceComposeUtils.composeDruidDataSource(dsList.get(0));
-			targetDataSources.put(DataSourceType.SLAVE.name(), dds);
+			for (SysDataSource item : dsList) {
+				DruidDataSource dds = DataSourceComposeUtils.composeDruidDataSource(item);
+				targetDataSources.put(DataSourceType.SLAVE.name() + Convert.toStr(item.getId()), dds);
+			}
 		}
+		DynamicDataSourceUtil.setTargetDataSources(targetDataSources);
 		return new DynamicDataSource(masterDataSource, targetDataSources);
 	}
 

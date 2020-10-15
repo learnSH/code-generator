@@ -11,21 +11,6 @@ import com.ricky.project.domain.GenTableColumn;
  */
 public interface GenTableColumnMapper
 {
-    /**
-     * 根据表名称查询列信息
-     * 
-     * @param tableName 表名称
-     * @return 列信息
-     */
-    public List<GenTableColumn> selectMySqlDbTableColumnsByName(String tableName);
-    
-    /**
-     * 根据表名称查询列信息
-     * 
-     * @param tableName 表名称
-     * @return 列信息
-     */
-    public List<GenTableColumn> selectOracleDbTableColumnsByName(String tableName);
     
     /**
      * 查询业务字段列表
@@ -51,6 +36,14 @@ public interface GenTableColumnMapper
      */
     public int updateGenTableColumn(GenTableColumn genTableColumn);
 
+    /**
+     * 删除业务字段
+     * 
+     * @param genTableColumns 列数据
+     * @return 结果
+     */
+    public int deleteGenTableColumns(List<GenTableColumn> genTableColumns);
+    
     /**
      * 批量删除业务字段
      * 

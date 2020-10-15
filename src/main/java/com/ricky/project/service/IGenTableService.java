@@ -24,20 +24,19 @@ public interface IGenTableService
      * 查询据库列表
      * 
      * @param genTable	业务信息
-     * @param dbType	数据库类型
      * @return 数据库表集合
      */
-    public List<GenTable> selectDbTableList(GenTable genTable,String dbType);
+    public List<GenTable> selectDbTableList(GenTable genTable);
 
     /**
      * 查询据库列表
      * 
      * @param tableNames	表名称组
-     * @param dbType		数据库类型
+     * @param dataSourceId	数据源主键
      * @return 数据库表集合
      */
-    public List<GenTable> selectDbTableListByNames(String[] tableNames,String dbType);
-
+    public List<GenTable> selectDbTableListByNames(String[] tableNames,Long dataSourceId);
+    
     /**
      * 查询所有表信息
      * 
@@ -74,8 +73,9 @@ public interface IGenTableService
      * 导入表结构
      * 
      * @param tableList 导入表列表
+     * @param dataSourceId	数据源主键
      */
-    public void importGenTable(List<GenTable> tableList);
+    public void importGenTable(List<GenTable> tableList, Long dataSourceId);
 
     /**
      * 预览代码
@@ -101,6 +101,13 @@ public interface IGenTableService
      */
     public void generatorCode(String tableName);
 
+    /**
+     * 同步数据库
+     * 
+     * @param tableName 表名称
+     */
+    public void synchDb(String tableName);
+    
     /**
      * 批量生成代码（下载方式）
      * 

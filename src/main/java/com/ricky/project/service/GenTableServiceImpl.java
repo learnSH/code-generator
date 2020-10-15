@@ -7,6 +7,7 @@ import java.io.StringWriter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -29,7 +31,6 @@ import com.ricky.common.utils.StringUtils;
 import com.ricky.common.utils.file.FileUtils;
 import com.ricky.common.utils.text.CharsetKit;
 import com.ricky.common.utils.text.Convert;
-import com.ricky.framework.aspectj.lang.annotation.DataSource;
 import com.ricky.framework.aspectj.lang.enums.DataSourceType;
 import com.ricky.framework.datasource.DynamicDataSourceContextHolder;
 import com.ricky.project.domain.GenTable;
@@ -40,6 +41,11 @@ import com.ricky.project.mapper.GenTableColumnMapper;
 import com.ricky.project.mapper.GenTableMapper;
 import com.ricky.project.mapper.SysConfigMapper;
 import com.ricky.project.mapper.SysDataSourceMapper;
+import com.ricky.project.mapper.slave.BaseMapper;
+import com.ricky.project.mapper.slave.MySQLMapper;
+import com.ricky.project.mapper.slave.OracleMapper;
+import com.ricky.project.mapper.slave.PostgreSQLMapper;
+import com.ricky.project.mapper.slave.SQLServerMapper;
 import com.ricky.project.util.GenUtils;
 import com.ricky.project.util.VelocityInitializer;
 import com.ricky.project.util.VelocityUtils;
@@ -61,10 +67,19 @@ public class GenTableServiceImpl implements IGenTableService
     private GenTableColumnMapper genTableColumnMapper;
 
     @Autowired
-    private SysConfigMapper sysConfigMapper;
+    private SysConfigMapper configMapper;
 
     @Autowired
     private SysDataSourceMapper dataSourceMapper;
+    
+    @Autowired
+    private MySQLMapper mysqlMapper;
+    @Autowired
+    private OracleMapper oracleMapper;
+    @Autowired
+    private PostgreSQLMapper postgresqlMapper;
+    @Autowired
+    private SQLServerMapper sqlserverMapper;
     
     /**
      * 查询业务信息
@@ -93,43 +108,91 @@ public class GenTableServiceImpl implements IGenTableService
     }
 
     /**
+     * 根据数据库类型获取对应的mapper
+     * 
+     * @param dbType 数据库类型
+     * @return
+     */
+    private BaseMapper getSlaveMapper(String dbType) 
+    {
+    	if (Constants.DATABASE_TYPE_MYSQL.equals(dbType)) 
+    	{
+			return mysqlMapper;
+		} 
+    	else if (Constants.DATABASE_TYPE_ORACLE.equals(dbType)) 
+		{
+			return oracleMapper;
+		}
+    	else if (Constants.DATABASE_TYPE_SQLSERVER.equals(dbType)) 
+		{
+			return sqlserverMapper;
+		}
+    	else if (Constants.DATABASE_TYPE_POSTGRESQL.equals(dbType)) 
+		{
+			return postgresqlMapper;
+		}
+    	return mysqlMapper;
+    }
+    
+    /**
+     * 根据表名获取列
+     * 
+     * @param dataSourceId	数据源主键
+     * @param tableName		表名
+     * @return
+     */
+    private List<GenTableColumn> selectDbTableColumnsByName(Long dataSourceId, String tableName)
+    {
+    	SysDataSource dataSource = dataSourceMapper.selectSysDataSource(dataSourceId);
+    	try {
+    		//切换数据源
+        	DynamicDataSourceContextHolder.setDataSourceType(DataSourceType.SLAVE.name() + Convert.toStr(dataSource.getId()));
+        	return getSlaveMapper(dataSource.getDbType()).selectDbTableColumnsByName(tableName);
+		} catch (Exception e) {
+			// 有异常不抛出，返回null，防止无法回滚
+			return null;
+		} finally {
+			DynamicDataSourceContextHolder.clearDataSourceType();
+		}
+    }
+    
+    /**
      * 查询据库列表
      * 
      * @param genTable 	业务信息
      * @param dbType	数据库类型
      * @return 数据库表集合
      */
-    @DataSource(value = DataSourceType.SLAVE)
-    public List<GenTable> selectDbTableList(GenTable genTable,String dbType)
+    public List<GenTable> selectDbTableList(GenTable genTable)
     {
-    	if (Constants.DATABASE_DRIVER_MYSQL.equals(dbType)) {
-			//MySql数据库
-    		return genTableMapper.selectMySqlDbTableList(genTable);
-		} else if (Constants.DATABASE_DRIVER_ORACLE.equals(dbType)) {
-			//Oracle数据库
-			return genTableMapper.selectOracleDbTableList(genTable);
+    	try {
+    		SysDataSource dataSource = dataSourceMapper.selectSysDataSource(genTable.getDataSourceId());
+        	
+        	//切换数据源
+        	DynamicDataSourceContextHolder.setDataSourceType(DataSourceType.SLAVE.name() + Convert.toStr(dataSource.getId()));
+        	return getSlaveMapper(dataSource.getDbType()).selectDbTableList(genTable);
+		} finally {
+			DynamicDataSourceContextHolder.clearDataSourceType();
 		}
-        return null;
     }
 
     /**
      * 查询据库列表
      * 
      * @param tableNames 表名称组
-     * @param dbType	   数据库类型
+     * @param dataSourceId	数据源主键
      * @return 数据库表集合
      */
-    @DataSource(value = DataSourceType.SLAVE)
-    public List<GenTable> selectDbTableListByNames(String[] tableNames,String dbType)
+    public List<GenTable> selectDbTableListByNames(String[] tableNames,Long dataSourceId)
     {
-    	if (Constants.DATABASE_DRIVER_MYSQL.equals(dbType)) {
-			//MySql数据库
-    		return genTableMapper.selectMySqlDbTableListByNames(tableNames);
-		} else if (Constants.DATABASE_DRIVER_ORACLE.equals(dbType)) {
-			//Oracle数据库
-			return genTableMapper.selectOracleDbTableListByNames(tableNames);
+    	SysDataSource dataSource = dataSourceMapper.selectSysDataSource(dataSourceId);
+    	try {
+    		//切换数据源
+        	DynamicDataSourceContextHolder.setDataSourceType(DataSourceType.SLAVE.name() + Convert.toStr(dataSource.getId()));
+        	return getSlaveMapper(dataSource.getDbType()).selectDbTableListByNames(tableNames);
+		} finally {
+			DynamicDataSourceContextHolder.clearDataSourceType();
 		}
-    	return null;
     }
 
     /**
@@ -183,32 +246,26 @@ public class GenTableServiceImpl implements IGenTableService
      * 导入表结构
      * 
      * @param tableList 导入表列表
+     * @param dataSourceId	数据源主键
      */
     @Override
-    public void importGenTable(List<GenTable> tableList)
+    public void importGenTable(List<GenTable> tableList, Long dataSourceId)
     {
-    	SysConfig config = sysConfigMapper.selectSysConfig();
+    	SysConfig config = configMapper.selectSysConfig();
         String operName = "管理员";
-        SysDataSource dataSource = dataSourceMapper.selectSysDataSource();
+        SysDataSource dataSource = dataSourceMapper.selectSysDataSource(dataSourceId);
         for (GenTable table : tableList)
         {
             try
             {
                 String tableName = table.getTableName();
                 GenUtils.initTable(table, operName,config);
+                table.setDataSourceId(dataSourceId);
                 int row = genTableMapper.insertGenTable(table);
                 if (row > 0)
                 {
-                    // 保存列信息
-                	DynamicDataSourceContextHolder.setDataSourceType(DataSourceType.SLAVE.name());
-                    List<GenTableColumn> genTableColumns =  null;
-                    if (Constants.DATABASE_DRIVER_MYSQL.equals(dataSource.getDriver())) {
-                    	genTableColumns =  genTableColumnMapper.selectMySqlDbTableColumnsByName(tableName);
-					} else if (Constants.DATABASE_DRIVER_ORACLE.equals(dataSource.getDriver())) {
-						genTableColumns =  genTableColumnMapper.selectOracleDbTableColumnsByName(tableName);
-					}
-                    DynamicDataSourceContextHolder.clearDataSourceType();
-                    for (GenTableColumn column : genTableColumns)
+                	List<GenTableColumn> dbTableColumns = selectDbTableColumnsByName(dataSource.getId(),tableName);
+                    for (GenTableColumn column : dbTableColumns)
                     {
                         GenUtils.initColumnField(column, table);
                         genTableColumnMapper.insertGenTableColumn(column);
@@ -274,7 +331,6 @@ public class GenTableServiceImpl implements IGenTableService
      * 生成代码（自定义路径）
      * 
      * @param tableName 表名称
-     * @return 数据
      */
     @Override
     public void generatorCode(String tableName)
@@ -314,7 +370,44 @@ public class GenTableServiceImpl implements IGenTableService
     }
 
     /**
-     * 批量生成代码（下载方式）
+     * 同步数据库
+     * 
+     * @param tableName 表名称
+     */
+    @Override
+    public void synchDb(String tableName)
+    {
+    	try {
+    		GenTable table = genTableMapper.selectGenTableByName(tableName);
+            List<GenTableColumn> tableColumns = table.getColumns();
+            List<String> tableColumnNames = tableColumns.stream().map(GenTableColumn::getColumnName).collect(Collectors.toList());
+
+            SysDataSource dataSource = dataSourceMapper.selectSysDataSource(table.getDataSourceId());
+            List<GenTableColumn> dbTableColumns = selectDbTableColumnsByName(dataSource.getId(),tableName);
+            List<String> dbTableColumnNames = dbTableColumns.stream().map(GenTableColumn::getColumnName).collect(Collectors.toList());
+
+            dbTableColumns.forEach(column -> {
+                if (!tableColumnNames.contains(column.getColumnName()))
+                {
+                    GenUtils.initColumnField(column, table);
+                    genTableColumnMapper.insertGenTableColumn(column);
+                }
+            });
+
+            List<GenTableColumn> delColumns = tableColumns.stream()
+                    .filter(column -> !dbTableColumnNames.contains(column.getColumnName())).collect(Collectors.toList());
+            if (StringUtils.isNotEmpty(delColumns))
+            {
+                genTableColumnMapper.deleteGenTableColumns(delColumns);
+            }
+		} catch (Exception e) {
+			// 发生异常手动回滚
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+		}
+    }
+    
+    /**
+     * 批量生成代码
      * 
      * @param tableNames 表数组
      * @return 数据

@@ -20,6 +20,9 @@ public class GenTable extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+    /** 数据源主键 */
+    private Long dataSourceId;
+    
     /** 编号 */
     private Long tableId;
 
@@ -98,7 +101,15 @@ public class GenTable extends BaseEntity
     /** 上级菜单名称字段 */
     private String parentMenuName;
 
-    public Long getTableId()
+    public Long getDataSourceId() {
+		return dataSourceId;
+	}
+
+	public void setDataSourceId(Long dataSourceId) {
+		this.dataSourceId = dataSourceId;
+	}
+
+	public Long getTableId()
     {
         return tableId;
     }

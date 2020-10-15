@@ -18,39 +18,15 @@ public interface GenTableMapper
      * @return 业务集合
      */
     public List<GenTable> selectGenTableList(GenTable genTable);
+
+    /**
+     * 查询表名称业务信息
+     * 
+     * @param tableName 表名称
+     * @return 业务信息
+     */
+    public GenTable selectGenTableByName(String tableName);
     
-    /**
-     * 查询据库列表
-     * 
-     * @param genTable 业务信息
-     * @return 数据库表集合
-     */
-    public List<GenTable> selectMySqlDbTableList(GenTable genTable);
-
-    /**
-     * 查询据库列表
-     * 
-     * @param tableNames 表名称组
-     * @return 数据库表集合
-     */
-    public List<GenTable> selectMySqlDbTableListByNames(String[] tableNames);
-    
-    /**
-     * 查询据库列表
-     * 
-     * @param genTable 业务信息
-     * @return 数据库表集合
-     */
-    public List<GenTable> selectOracleDbTableList(GenTable genTable);
-
-    /**
-     * 查询据库列表
-     * 
-     * @param tableNames 表名称组
-     * @return 数据库表集合
-     */
-    public List<GenTable> selectOracleDbTableListByNames(String[] tableNames);
-
     /**
      * 查询所有表信息
      * 
@@ -65,14 +41,6 @@ public interface GenTableMapper
      * @return 业务信息
      */
     public GenTable selectGenTableById(Long id);
-
-    /**
-     * 查询表名称业务信息
-     * 
-     * @param tableName 表名称
-     * @return 业务信息
-     */
-    public GenTable selectGenTableByName(String tableName);
 
     /**
      * 新增业务

@@ -1,11 +1,13 @@
 package com.ricky.project.controller;
 
 import java.sql.Connection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,10 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.ricky.common.exception.BusinessException;
 import com.ricky.common.utils.DataSourceComposeUtils;
+import com.ricky.common.utils.text.Convert;
 import com.ricky.framework.aspectj.lang.enums.DataSourceType;
 import com.ricky.framework.datasource.DynamicDataSourceUtil;
 import com.ricky.framework.web.controller.BaseController;
 import com.ricky.framework.web.domain.AjaxResult;
+import com.ricky.framework.web.page.TableDataInfo;
 import com.ricky.project.domain.SysDataSource;
 import com.ricky.project.service.ISysDataSourceService;
 
@@ -32,16 +36,53 @@ public class SysDataSourceController extends BaseController
     private String prefix = "system/dataSource";
 
     @Autowired
-    private ISysDataSourceService sysDataSourceService;
+    private ISysDataSourceService dataSourceService;
 
     /**
-     * 设置系统配置
+     * 数据源
      */
     @GetMapping()
     public String config(ModelMap mmap)
     {
-    	SysDataSource dataSource = sysDataSourceService.selectSysDataSource();
-        mmap.put("dataSource", dataSource == null ? new SysDataSource() : dataSource);
+        return prefix + "/list";
+    }
+    
+    @PostMapping("/list")
+    @ResponseBody
+    public TableDataInfo list(SysDataSource dataSource)
+    {
+        startPage();
+        List<SysDataSource> list = dataSourceService.selectSysDataSourceList(dataSource);
+        return getDataTable(list);
+    }
+    
+    /**
+     * 选择数据源
+     */
+    @GetMapping("/select")
+    public String selectDataSource(ModelMap mmap)
+    {
+        return prefix + "/select";
+    }
+    
+    /**
+     * 数据源新增
+     */
+    @GetMapping("/add")
+    public String add(ModelMap mmap)
+    {
+        mmap.put("dataSource", new SysDataSource());
+        return prefix + "/config";
+    }
+    
+    /**
+     * 数据源编辑
+     */
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable("id") Long id, ModelMap mmap)
+    {
+    	SysDataSource dataSource = dataSourceService.selectSysDataSource(id);
+        mmap.put("dataSource", dataSource);
         return prefix + "/config";
     }
     
@@ -74,19 +115,57 @@ public class SysDataSourceController extends BaseController
     @PostMapping("/save")
     @ResponseBody
     public AjaxResult save(SysDataSource dataSource) throws BusinessException{
+    	boolean updateflag = false;//是否是更新
     	int rows= 0;
-    	if (dataSource.getDataId() != null) {
-    		rows= sysDataSourceService.updateSysDataSource(dataSource);
+    	if (dataSource.getId() != null) {
+    		rows= dataSourceService.updateSysDataSource(dataSource);
+    		updateflag = true;
 		} else {
-			rows= sysDataSourceService.insertSysDataSource(dataSource);
+			rows= dataSourceService.insertSysDataSource(dataSource);
+			updateflag = false;
 		}
     	if (rows > 0) {
     		DruidDataSource druidDataSource = DataSourceComposeUtils.composeDruidDataSource(dataSource);
-            //添加数据源
-            DynamicDataSourceUtil.addDataSource(DataSourceType.SLAVE.name(), druidDataSource);
+            if (updateflag) {
+            	//替换数据源
+                DynamicDataSourceUtil.replaceTargetDataSource(DataSourceType.SLAVE.name() + Convert.toStr(dataSource.getId()), druidDataSource);
+			} else {
+				//添加数据源
+	            DynamicDataSourceUtil.addTargetDataSource(DataSourceType.SLAVE.name() + Convert.toStr(dataSource.getId()), druidDataSource);
+			}
             //刷新数据源
             DynamicDataSourceUtil.flushDataSource();
 		}
         return toAjax(rows);
+    }
+    
+    /**
+     * 删除数据源
+     */
+    @PostMapping("/remove")
+    @ResponseBody
+    public AjaxResult remove(String ids)
+    {
+    	int rows = dataSourceService.deleteSysDataSourceByIds(ids);
+    	if (rows > 0) {
+    		String[] array = Convert.toStrArray(ids);
+    		for (String id : array) {
+    			//删除数据源
+    			DynamicDataSourceUtil.deleteTargetDataSource(DataSourceType.SLAVE.name() + id);
+			}
+    		//刷新数据源
+            DynamicDataSourceUtil.flushDataSource();
+		}
+        return toAjax(rows);
+    }
+    
+    /**
+     * 数据源状态修改
+     */
+    @PostMapping("/changeStatus")
+    @ResponseBody
+    public AjaxResult changeStatus(SysDataSource dataSource)
+    {
+        return toAjax(dataSourceService.changeStatus(dataSource));
     }
 }

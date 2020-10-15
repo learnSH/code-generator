@@ -17,20 +17,20 @@ public class SysDataSource extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 数据源主键 */
-    private Long dataId;
+    private Long id;
 
     /** 名称 */
     private String name;
 
-    /** 驱动类型*/
-    private String driver;
+    /** 数据库类型*/
+    private String dbType;
     
     /** oracle连接方式*/
     private String oracleConnMode;
     
     /** oracle连接服务名或SID*/
     private String serviceNameOrSid;
-
+    
     /** 主机 */
     private String host;
     
@@ -42,13 +42,16 @@ public class SysDataSource extends BaseEntity
     
     /** 密码 */
     private String password;
+    
+    /** 状态（0正常 1停用） */
+    private String status;
 
-	public Long getDataId() {
-		return dataId;
+	public Long getId() {
+		return id;
 	}
 
-	public void setDataId(Long dataId) {
-		this.dataId = dataId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -59,12 +62,12 @@ public class SysDataSource extends BaseEntity
 		this.name = name;
 	}
 
-	public String getDriver() {
-		return driver;
+	public String getDbType() {
+		return dbType;
 	}
 
-	public void setDriver(String driver) {
-		this.driver = driver;
+	public void setDbType(String dbType) {
+		this.dbType = dbType;
 	}
 
 	public String getOracleConnMode() {
@@ -115,18 +118,27 @@ public class SysDataSource extends BaseEntity
 		this.password = password;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	@Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("dataId", getDataId())
+            .append("id", getId())
             .append("name", getName())
-            .append("driver", getDriver())
+            .append("dbType", getDbType())
             .append("oracleConnType", getOracleConnMode())
             .append("serviceNameOrSid", getServiceNameOrSid())
             .append("host", getHost())
             .append("port", getPort())
             .append("username", getUsername())
             .append("password", getPassword())
+            .append("status", getStatus())
             .toString();
     }
 }

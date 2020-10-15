@@ -1,8 +1,11 @@
 package com.ricky.project.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ricky.common.utils.text.Convert;
 import com.ricky.project.domain.SysDataSource;
 import com.ricky.project.mapper.SysDataSourceMapper;
 
@@ -18,13 +21,25 @@ public class SysDataSourceServiceImpl implements ISysDataSourceService
     private SysDataSourceMapper mapper;
 
     /**
+     * 根据条件分页查询数据源数据
+     * 
+     * @param dataSource 数据源数据信息
+     * @return 数据源数据集合信息
+     */
+    @Override
+    public List<SysDataSource> selectSysDataSourceList(SysDataSource dataSource){
+    	return mapper.selectSysDataSourceList(dataSource);
+    }
+    
+    /**
      * 查询系统数据源信息
      * 
+     * @param	id	数据源主键
      * @return 数据源配置
      */
     @Override
-    public SysDataSource selectSysDataSource() {
-    	return mapper.selectSysDataSource();
+    public SysDataSource selectSysDataSource(Long id) {
+    	return mapper.selectSysDataSource(id);
     }
     
     /**
@@ -34,8 +49,8 @@ public class SysDataSourceServiceImpl implements ISysDataSourceService
      * @return 结果
      */
     @Override
-    public int insertSysDataSource(SysDataSource sysDataSource) {
-    	return mapper.insertSysDataSource(sysDataSource);
+    public int insertSysDataSource(SysDataSource dataSource) {
+    	return mapper.insertSysDataSource(dataSource);
     }
     
     /**
@@ -45,7 +60,29 @@ public class SysDataSourceServiceImpl implements ISysDataSourceService
      * @return 结果
      */
     @Override
-    public int updateSysDataSource(SysDataSource sysDataSource) {
-    	return mapper.updateSysDataSource(sysDataSource);
+    public int updateSysDataSource(SysDataSource dataSource) {
+    	return mapper.updateSysDataSource(dataSource);
+    }
+    
+    /**
+     * 批量删除数据源数据
+     * 
+     * @param ids 需要删除的数据
+     * @return 结果
+     */
+    @Override
+    public int deleteSysDataSourceByIds(String ids) {
+    	return mapper.deleteSysDataSourceByIds(Convert.toStrArray(ids));
+    }
+    
+    /**
+     * 数据源状态修改
+     * 
+     * @param dataSource 数据源信息
+     * @return 结果
+     */
+    @Override
+    public int changeStatus(SysDataSource dataSource) {
+    	return mapper.updateSysDataSource(dataSource);
     }
 }

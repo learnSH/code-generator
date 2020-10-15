@@ -14,11 +14,18 @@
     <link th:href="@{/css/animate.css}" rel="stylesheet"/>
     <link th:href="@{/css/style.css}" rel="stylesheet"/>
     <link th:href="@{/css/skins.css}" rel="stylesheet"/>
-    <link th:href="@{/ruoyi/css/ry-ui.css?v=4.3.1}" rel="stylesheet"/>
+    <link th:href="@{/ruoyi/css/ry-ui.css?v=4.4.0}" rel="stylesheet"/>
     <style type="text/css">
     	#page-wrapper{
     		margin: 0;
     	}
+    	@media ( max-width : 1000px) {
+    		.welcome-message {
+    			display: block;
+        		float: right!important;
+    			margin-right: -15px;
+    		}
+		}
     </style>
 </head>
 <body class="fixed-sidebar full-height-layout gray-bg skin-blue theme-dark" style="overflow: hidden">
@@ -27,11 +34,11 @@
     <div id="page-wrapper" class="gray-bg dashbard-1">
         <div class="row border-bottom">
             <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
-                <div class="navbar-header"><p style="font-size: 18px;line-height: 50px;color: #FFF;margin-left: 10px;">代码生成器</p></div>
+                <div class="navbar-header" style="width: 20%;"><p style="font-size: 18px;line-height: 50px;color: #FFF;margin-left: 10px;">代码生成器</p></div>
                 <ul class="nav navbar-top-links navbar-right welcome-message">
                 	<li><a title="字典管理" th:href="@{/system/dict}" class="menuItem"><i class="fa fa-cog"></i> 字典管理</a></li>
 				    <li><a title="系统配置" onclick="sysConfig()" class="menuItem"><i class="fa fa-cog"></i> 系统配置</a></li>
-                    <li><a title="数据源设置" onclick="dataSource()" class="menuItem"><i class="fa fa-database"></i> 数据源</a></li>
+                    <li><a title="数据源设置" th:href="@{/system/dataSource}" class="menuItem"><i class="fa fa-database"></i> 数据源</a></li>
                 </ul>
             </nav>
         </div>
@@ -109,11 +116,6 @@
 	function sysConfig() {
 	    var url = ctx + 'system/config';
 	    $.modal.open("系统配置", url,'',400);
-	}
-	/*数据源配置*/
-	function dataSource() {
-	    var url = ctx + 'system/dataSource';
-	    $.modal.open("数据源配置", url,'',500);
 	}
 </script>
 </body>

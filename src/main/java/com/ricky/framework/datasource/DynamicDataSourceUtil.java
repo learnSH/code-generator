@@ -13,8 +13,8 @@ import com.ricky.common.utils.spring.SpringUtils;
  */
 public class DynamicDataSourceUtil 
 {
-    public static Map<Object, Object> dataSourceMap = new HashMap<>();
- 
+    public static Map<Object, Object> dataSourceMap = new HashMap<>();//其他数据源
+    
     public static void flushDataSource() {
         //获取spring管理的dynamicDataSource
         DynamicDataSource dynamicDataSource = (DynamicDataSource) SpringUtils.getBean("dynamicDataSource");
@@ -24,7 +24,37 @@ public class DynamicDataSourceUtil
         dynamicDataSource.afterPropertiesSet();
     }
  
-    public static void addDataSource(String key, DruidDataSource masterDataSource) {
-        dataSourceMap.put(key, masterDataSource);
+    /**
+     * 删除数据源
+     * @param key
+     */
+    public static void deleteTargetDataSource(Object key) {
+        dataSourceMap.remove(key);
+    }
+    
+    /**
+     * 替换数据源
+     * @param key
+     * @param dataSource
+     */
+    public static void replaceTargetDataSource(Object key,DruidDataSource dataSource) {
+        dataSourceMap.replace(key, dataSource);
+    }
+    
+    /**
+     * 添加数据源
+     * @param key
+     * @param dataSource
+     */
+    public static void addTargetDataSource(Object key, DruidDataSource dataSource) {
+        dataSourceMap.put(key, dataSource);
+    }
+    
+    /**
+     * 设置数据源
+     * @param targetDataSources
+     */
+    public static void setTargetDataSources(Map<Object, Object> targetDataSources) {
+    	dataSourceMap = targetDataSources;
     }
 }
