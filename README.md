@@ -2,9 +2,7 @@
 
 #### 介绍
 代码生成工具
-抽取自“若依管理系统”-代码生成模块，可在本地运行，无需依赖服务器
-
-传送门：https://gitee.com/y_project/RuoYi
+抽取自[若依管理系统](https://gitee.com/y_project/RuoYi)-代码生成模块，可在本地运行，无需依赖服务器
 
 #### 项目说明
 1. 代码参考若依管理系统
@@ -23,6 +21,7 @@ https://gitee.com/lpf_project/code-generator/releases/v2.0
 3. 如果需要更改端口号，打开“启动工具.bat”找到“--server.port=5064”更改
 4. tomcat启动后会自动打开浏览器，优先级为：谷歌→火狐→-系统默认浏览器；如果无法自动打开，可以手动打开浏览器输入：http://127.0.0.1:5064
 
+#### 效果图
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/1015/182721_30e89f74_389553.png "数据源.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/1015/182737_95d1dff4_389553.png "系统配置.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/1015/182759_29fb2ce6_389553.png "选择数据源.png")
