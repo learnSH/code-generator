@@ -23,6 +23,9 @@ public class GenTable extends BaseEntity
     /** 数据源主键 */
     private Long dataSourceId;
     
+    /** 数据源类型 */
+    private String dbType;
+    
     /** 编号 */
     private Long tableId;
 
@@ -107,6 +110,14 @@ public class GenTable extends BaseEntity
 
 	public void setDataSourceId(Long dataSourceId) {
 		this.dataSourceId = dataSourceId;
+	}
+
+	public String getDbType() {
+		return dbType;
+	}
+
+	public void setDbType(String dbType) {
+		this.dbType = dbType;
 	}
 
 	public Long getTableId()

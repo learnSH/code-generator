@@ -198,12 +198,13 @@ public class GenTableServiceImpl implements IGenTableService
     /**
      * 查询所有表信息
      * 
+     * @param dataSourceId	数据源主键
      * @return 表信息集合
      */
     @Override
-    public List<GenTable> selectGenTableAll()
+    public List<GenTable> selectGenTableAll(Long dataSourceId)
     {
-        return genTableMapper.selectGenTableAll();
+        return genTableMapper.selectGenTableAll(dataSourceId);
     }
     
     /**
@@ -290,10 +291,15 @@ public class GenTableServiceImpl implements IGenTableService
     	Map<String, String> dataMap = new LinkedHashMap<>();
         // 查询表信息
         GenTable table = genTableMapper.selectGenTableById(tableId);
+        // 查询数据源信息
+        SysDataSource dataSource = dataSourceMapper.selectSysDataSource(table.getDataSourceId());
         // 设置主子表信息
         setSubTable(table);
         // 设置主键列信息
         setPkColumn(table);
+        // 设置数据源类型
+        table.setDbType(dataSource.getDbType());
+        
         VelocityInitializer.initVelocity();
 
         VelocityContext context = VelocityUtils.prepareContext(table);
@@ -337,11 +343,15 @@ public class GenTableServiceImpl implements IGenTableService
     {
         // 查询表信息
         GenTable table = genTableMapper.selectGenTableByName(tableName);
+        // 查询数据源信息
+        SysDataSource dataSource = dataSourceMapper.selectSysDataSource(table.getDataSourceId());
         // 设置主子表信息
         setSubTable(table);
         // 设置主键列信息
         setPkColumn(table);
-
+        // 设置数据源类型
+        table.setDbType(dataSource.getDbType());
+        
         VelocityInitializer.initVelocity();
 
         VelocityContext context = VelocityUtils.prepareContext(table);
@@ -432,11 +442,15 @@ public class GenTableServiceImpl implements IGenTableService
     {
         // 查询表信息
         GenTable table = genTableMapper.selectGenTableByName(tableName);
+        // 查询数据源信息
+        SysDataSource dataSource = dataSourceMapper.selectSysDataSource(table.getDataSourceId());
         // 设置主子表信息
         setSubTable(table);
         // 设置主键列信息
         setPkColumn(table);
-
+        // 设置数据源类型
+        table.setDbType(dataSource.getDbType());
+        
         VelocityInitializer.initVelocity();
 
         VelocityContext context = VelocityUtils.prepareContext(table);

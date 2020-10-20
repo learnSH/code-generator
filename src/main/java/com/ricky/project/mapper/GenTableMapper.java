@@ -30,9 +30,10 @@ public interface GenTableMapper
     /**
      * 查询所有表信息
      * 
+     * @param dataSourceId	数据源主键
      * @return 表信息集合
      */
-    public List<GenTable> selectGenTableAll();
+    public List<GenTable> selectGenTableAll(Long dataSourceId);
     
     /**
      * 查询表ID业务信息
