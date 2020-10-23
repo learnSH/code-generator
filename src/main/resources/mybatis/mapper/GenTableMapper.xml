@@ -62,10 +62,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<include refid="selectGenTableVo"/>
 		<where>
 			<if test="tableName != null and tableName != ''">
-				AND lower(table_name) like lower(concat('%', #{tableName}, '%'))
+				AND lower(table_name) like lower('%'||#{tableName}||'%')
 			</if>
 			<if test="tableComment != null and tableComment != ''">
-				AND lower(table_comment) like lower(concat('%', #{tableComment}, '%'))
+				AND lower(table_comment) like lower('%'||#{tableComment}||'%')
 			</if>
 		</where>
 	</select>
