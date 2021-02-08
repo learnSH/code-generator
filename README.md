@@ -11,8 +11,12 @@
 4. 数据源可多条配置，导入表结构时进行选择数据源
 5. 工具目录中tools文件是jar文件，只是改了个名字，双击.bat启动
 
+#### 注意事项
+1. 代码生成后的sql文件在PostgreSQL下没有生成，需要自己在菜单中添加
+2. 目前导入表功能在SQLServer还没有测试
+
 #### 工具下载
-https://gitee.com/lpf_project/code-generator/releases/v2.0
+https://gitee.com/lpf_project/code-generator/releases/v4.6.0
 
 #### 运行说明
 
