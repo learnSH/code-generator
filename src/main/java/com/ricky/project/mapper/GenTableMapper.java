@@ -2,7 +2,10 @@ package com.ricky.project.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.ricky.project.domain.GenTable;
+import com.ricky.project.domain.GenTableColumn;
 
 /**
  * 业务 数据层
@@ -66,4 +69,40 @@ public interface GenTableMapper
      * @return 结果
      */
     public int deleteGenTableByIds(Long[] ids);
+    
+    /**
+     * 查询据库列表
+     * 
+     * @param genTable 业务信息
+     * @param dbType 数据库类型
+     * @return 数据库表集合
+     */
+    public List<GenTable> selectDbTableList(@Param("genTable")GenTable genTable, @Param("dbType")String dbType);
+    
+    /**
+     * 查询据库列表
+     * 
+     * @param genTable 业务信息
+     * @param dbType 数据库类型
+     * @return 数据库表集合
+     */
+    public String selectTest();
+
+    /**
+     * 查询据库列表
+     * 
+     * @param tableNames 表名称组
+     * @param dbType 数据库类型
+     * @return 数据库表集合
+     */
+    public List<GenTable> selectDbTableListByNames(@Param("tableNames")String[] tableNames, @Param("dbType")String dbType);
+    
+    /**
+     * 根据表名称查询列信息
+     * 
+     * @param tableName 表名称
+     * @param dbType 数据库类型
+     * @return 列信息
+     */
+    public List<GenTableColumn> selectDbTableColumnsByName(@Param("tableName")String tableName, @Param("dbType")String dbType);
 }

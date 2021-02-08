@@ -42,13 +42,14 @@ public class GenUtils
         column.setCreateBy(table.getCreateBy());
         // 设置java字段名
         column.setJavaField(StringUtils.toCamelCase(columnName));
-
-        if (arraysContains(GenConstants.COLUMNTYPE_STR, dataType))
+        // 设置默认类型
+        column.setJavaType(GenConstants.TYPE_STRING);
+        
+        if (arraysContains(GenConstants.COLUMNTYPE_STR, dataType) || arraysContains(GenConstants.COLUMNTYPE_TEXT, dataType))
         {
-            column.setJavaType(GenConstants.TYPE_STRING);
             // 字符串长度超过500设置为文本域
             Integer columnLength = getColumnLength(column.getColumnType());
-            String htmlType = columnLength >= 500 ? GenConstants.HTML_TEXTAREA : GenConstants.HTML_INPUT;
+            String htmlType = columnLength >= 500 || arraysContains(GenConstants.COLUMNTYPE_TEXT, dataType) ? GenConstants.HTML_TEXTAREA : GenConstants.HTML_INPUT;
             column.setHtmlType(htmlType);
         }
         else if (arraysContains(GenConstants.COLUMNTYPE_TIME, dataType))
@@ -60,7 +61,7 @@ public class GenUtils
         {
             column.setHtmlType(GenConstants.HTML_INPUT);
 
-            // 如果是浮点型
+            // 如果是浮点型 统一用BigDecimal
             String[] str = StringUtils.split(StringUtils.substringBetween(column.getColumnType(), "(", ")"), ",");
             if (str != null && str.length == 2 && Integer.parseInt(str[1]) > 0)
             {
@@ -244,21 +245,5 @@ public class GenUtils
         {
             return 0;
         }
-    }
-
-    /**
-     * 获取空数组列表
-     * 
-     * @param length 长度
-     * @return 数组信息
-     */
-    public static String[] emptyList(int length)
-    {
-        String[] values = new String[length];
-        for (int i = 0; i < length; i++)
-        {
-            values[i] = StringUtils.EMPTY;
-        }
-        return values;
     }
 }

@@ -41,11 +41,6 @@ import com.ricky.project.mapper.GenTableColumnMapper;
 import com.ricky.project.mapper.GenTableMapper;
 import com.ricky.project.mapper.SysConfigMapper;
 import com.ricky.project.mapper.SysDataSourceMapper;
-import com.ricky.project.mapper.slave.BaseMapper;
-import com.ricky.project.mapper.slave.MySQLMapper;
-import com.ricky.project.mapper.slave.OracleMapper;
-import com.ricky.project.mapper.slave.PostgreSQLMapper;
-import com.ricky.project.mapper.slave.SQLServerMapper;
 import com.ricky.project.util.GenUtils;
 import com.ricky.project.util.VelocityInitializer;
 import com.ricky.project.util.VelocityUtils;
@@ -71,16 +66,7 @@ public class GenTableServiceImpl implements IGenTableService
 
     @Autowired
     private SysDataSourceMapper dataSourceMapper;
-    
-    @Autowired
-    private MySQLMapper mysqlMapper;
-    @Autowired
-    private OracleMapper oracleMapper;
-    @Autowired
-    private PostgreSQLMapper postgresqlMapper;
-    @Autowired
-    private SQLServerMapper sqlserverMapper;
-    
+
     /**
      * 查询业务信息
      * 
@@ -108,97 +94,77 @@ public class GenTableServiceImpl implements IGenTableService
     }
 
     /**
-     * 根据数据库类型获取对应的mapper
-     * 
-     * @param dbType 数据库类型
-     * @return
-     */
-    private BaseMapper getSlaveMapper(String dbType) 
-    {
-    	if (Constants.DATABASE_TYPE_MYSQL.equals(dbType)) 
-    	{
-			return mysqlMapper;
-		} 
-    	else if (Constants.DATABASE_TYPE_ORACLE.equals(dbType)) 
-		{
-			return oracleMapper;
-		}
-    	else if (Constants.DATABASE_TYPE_SQLSERVER.equals(dbType)) 
-		{
-			return sqlserverMapper;
-		}
-    	else if (Constants.DATABASE_TYPE_POSTGRESQL.equals(dbType)) 
-		{
-			return postgresqlMapper;
-		}
-    	return mysqlMapper;
-    }
-    
-    /**
      * 根据表名获取列
      * 
-     * @param dataSourceId	数据源主键
-     * @param tableName		表名
+     * @param dataSourceId 数据源主键
+     * @param tableName 表名
      * @return
      */
     private List<GenTableColumn> selectDbTableColumnsByName(Long dataSourceId, String tableName)
     {
-    	SysDataSource dataSource = dataSourceMapper.selectSysDataSource(dataSourceId);
-    	try {
-    		//切换数据源
-        	DynamicDataSourceContextHolder.setDataSourceType(DataSourceType.SLAVE.name() + Convert.toStr(dataSource.getId()));
-        	return getSlaveMapper(dataSource.getDbType()).selectDbTableColumnsByName(tableName);
-		} catch (Exception e) {
-			// 有异常不抛出，返回null，防止无法回滚
-			return null;
-		} finally {
-			DynamicDataSourceContextHolder.clearDataSourceType();
-		}
+        SysDataSource dataSource = dataSourceMapper.selectSysDataSource(dataSourceId);
+        try
+        {
+            // 切换数据源
+            DynamicDataSourceContextHolder
+                    .setDataSourceType(DataSourceType.SLAVE.name() + Convert.toStr(dataSource.getId()));
+            return genTableMapper.selectDbTableColumnsByName(tableName, dataSource.getDbType());
+        }
+        finally
+        {
+            DynamicDataSourceContextHolder.clearDataSourceType();
+        }
     }
-    
+
     /**
      * 查询据库列表
      * 
-     * @param genTable 	业务信息
-     * @param dbType	数据库类型
+     * @param genTable 业务信息
+     * @param dataSource 数据源信息
      * @return 数据库表集合
      */
-    public List<GenTable> selectDbTableList(GenTable genTable)
+    public List<GenTable> selectDbTableList(GenTable genTable, SysDataSource dataSource)
     {
-    	try {
-    		SysDataSource dataSource = dataSourceMapper.selectSysDataSource(genTable.getDataSourceId());
-        	
-        	//切换数据源
-        	DynamicDataSourceContextHolder.setDataSourceType(DataSourceType.SLAVE.name() + Convert.toStr(dataSource.getId()));
-        	return getSlaveMapper(dataSource.getDbType()).selectDbTableList(genTable);
-		} finally {
-			DynamicDataSourceContextHolder.clearDataSourceType();
-		}
+        try
+        {
+            // 切换数据源
+            DynamicDataSourceContextHolder
+                    .setDataSourceType(DataSourceType.SLAVE.name() + Convert.toStr(dataSource.getId()));
+            return genTableMapper.selectDbTableList(genTable, dataSource.getDbType());
+        }
+        finally
+        {
+            DynamicDataSourceContextHolder.clearDataSourceType();
+        }
     }
 
     /**
      * 查询据库列表
      * 
      * @param tableNames 表名称组
-     * @param dataSourceId	数据源主键
+     * @param dataSourceId 数据源主键
      * @return 数据库表集合
      */
-    public List<GenTable> selectDbTableListByNames(String[] tableNames,Long dataSourceId)
+    public List<GenTable> selectDbTableListByNames(String[] tableNames, Long dataSourceId)
     {
-    	SysDataSource dataSource = dataSourceMapper.selectSysDataSource(dataSourceId);
-    	try {
-    		//切换数据源
-        	DynamicDataSourceContextHolder.setDataSourceType(DataSourceType.SLAVE.name() + Convert.toStr(dataSource.getId()));
-        	return getSlaveMapper(dataSource.getDbType()).selectDbTableListByNames(tableNames);
-		} finally {
-			DynamicDataSourceContextHolder.clearDataSourceType();
-		}
+        SysDataSource dataSource = dataSourceMapper.selectSysDataSource(dataSourceId);
+        try
+        {
+            // 切换数据源
+            DynamicDataSourceContextHolder
+                    .setDataSourceType(DataSourceType.SLAVE.name() + Convert.toStr(dataSource.getId()));
+            return genTableMapper.selectDbTableListByNames(tableNames, dataSource.getDbType());
+        }
+        finally
+        {
+            DynamicDataSourceContextHolder.clearDataSourceType();
+        }
     }
 
     /**
      * 查询所有表信息
      * 
-     * @param dataSourceId	数据源主键
+     * @param dataSourceId 数据源主键
      * @return 表信息集合
      */
     @Override
@@ -206,7 +172,7 @@ public class GenTableServiceImpl implements IGenTableService
     {
         return genTableMapper.selectGenTableAll(dataSourceId);
     }
-    
+
     /**
      * 修改业务
      * 
@@ -247,12 +213,12 @@ public class GenTableServiceImpl implements IGenTableService
      * 导入表结构
      * 
      * @param tableList 导入表列表
-     * @param dataSourceId	数据源主键
+     * @param dataSourceId 数据源主键
      */
     @Override
     public void importGenTable(List<GenTable> tableList, Long dataSourceId)
     {
-    	SysConfig config = configMapper.selectSysConfig();
+        SysConfig config = configMapper.selectSysConfig();
         String operName = "管理员";
         SysDataSource dataSource = dataSourceMapper.selectSysDataSource(dataSourceId);
         for (GenTable table : tableList)
@@ -260,12 +226,12 @@ public class GenTableServiceImpl implements IGenTableService
             try
             {
                 String tableName = table.getTableName();
-                GenUtils.initTable(table, operName,config);
+                GenUtils.initTable(table, operName, config);
                 table.setDataSourceId(dataSourceId);
                 int row = genTableMapper.insertGenTable(table);
                 if (row > 0)
                 {
-                	List<GenTableColumn> dbTableColumns = selectDbTableColumnsByName(dataSource.getId(),tableName);
+                    List<GenTableColumn> dbTableColumns = selectDbTableColumnsByName(dataSource.getId(), tableName);
                     for (GenTableColumn column : dbTableColumns)
                     {
                         GenUtils.initColumnField(column, table);
@@ -288,7 +254,7 @@ public class GenTableServiceImpl implements IGenTableService
      */
     public Map<String, String> previewCode(Long tableId)
     {
-    	Map<String, String> dataMap = new LinkedHashMap<>();
+        Map<String, String> dataMap = new LinkedHashMap<>();
         // 查询表信息
         GenTable table = genTableMapper.selectGenTableById(tableId);
         // 查询数据源信息
@@ -299,7 +265,7 @@ public class GenTableServiceImpl implements IGenTableService
         setPkColumn(table);
         // 设置数据源类型
         table.setDbType(dataSource.getDbType());
-        
+
         VelocityInitializer.initVelocity();
 
         VelocityContext context = VelocityUtils.prepareContext(table);
@@ -351,7 +317,7 @@ public class GenTableServiceImpl implements IGenTableService
         setPkColumn(table);
         // 设置数据源类型
         table.setDbType(dataSource.getDbType());
-        
+
         VelocityInitializer.initVelocity();
 
         VelocityContext context = VelocityUtils.prepareContext(table);
@@ -387,14 +353,17 @@ public class GenTableServiceImpl implements IGenTableService
     @Override
     public void synchDb(String tableName)
     {
-    	try {
-    		GenTable table = genTableMapper.selectGenTableByName(tableName);
+        try
+        {
+            GenTable table = genTableMapper.selectGenTableByName(tableName);
             List<GenTableColumn> tableColumns = table.getColumns();
-            List<String> tableColumnNames = tableColumns.stream().map(GenTableColumn::getColumnName).collect(Collectors.toList());
+            List<String> tableColumnNames = tableColumns.stream().map(GenTableColumn::getColumnName)
+                    .collect(Collectors.toList());
 
             SysDataSource dataSource = dataSourceMapper.selectSysDataSource(table.getDataSourceId());
-            List<GenTableColumn> dbTableColumns = selectDbTableColumnsByName(dataSource.getId(),tableName);
-            List<String> dbTableColumnNames = dbTableColumns.stream().map(GenTableColumn::getColumnName).collect(Collectors.toList());
+            List<GenTableColumn> dbTableColumns = selectDbTableColumnsByName(dataSource.getId(), tableName);
+            List<String> dbTableColumnNames = dbTableColumns.stream().map(GenTableColumn::getColumnName)
+                    .collect(Collectors.toList());
 
             dbTableColumns.forEach(column -> {
                 if (!tableColumnNames.contains(column.getColumnName()))
@@ -405,17 +374,20 @@ public class GenTableServiceImpl implements IGenTableService
             });
 
             List<GenTableColumn> delColumns = tableColumns.stream()
-                    .filter(column -> !dbTableColumnNames.contains(column.getColumnName())).collect(Collectors.toList());
+                    .filter(column -> !dbTableColumnNames.contains(column.getColumnName()))
+                    .collect(Collectors.toList());
             if (StringUtils.isNotEmpty(delColumns))
             {
                 genTableColumnMapper.deleteGenTableColumns(delColumns);
             }
-		} catch (Exception e) {
-			// 发生异常手动回滚
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-		}
+        }
+        catch (Exception e)
+        {
+            // 发生异常手动回滚
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
     }
-    
+
     /**
      * 批量生成代码
      * 
@@ -450,7 +422,7 @@ public class GenTableServiceImpl implements IGenTableService
         setPkColumn(table);
         // 设置数据源类型
         table.setDbType(dataSource.getDbType());
-        
+
         VelocityInitializer.initVelocity();
 
         VelocityContext context = VelocityUtils.prepareContext(table);
@@ -582,7 +554,7 @@ public class GenTableServiceImpl implements IGenTableService
             String treeName = paramsObj.getString(GenConstants.TREE_NAME);
             String parentMenuId = paramsObj.getString(GenConstants.PARENT_MENU_ID);
             String parentMenuName = paramsObj.getString(GenConstants.PARENT_MENU_NAME);
-            
+
             genTable.setTreeCode(treeCode);
             genTable.setTreeParentCode(treeParentCode);
             genTable.setTreeName(treeName);
@@ -603,7 +575,8 @@ public class GenTableServiceImpl implements IGenTableService
         String genPath = table.getGenPath();
         if (StringUtils.equals(genPath, "/"))
         {
-            return System.getProperty("user.dir") + File.separator + "src" + File.separator + VelocityUtils.getFileName(template, table);
+            return System.getProperty("user.dir") + File.separator + "src" + File.separator
+                    + VelocityUtils.getFileName(template, table);
         }
         return genPath + File.separator + VelocityUtils.getFileName(template, table);
     }

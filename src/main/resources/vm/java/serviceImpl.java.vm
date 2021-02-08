@@ -1,9 +1,9 @@
-package ${packageName}.service.impl;
+package ${packageName}.${businessName}.service.impl;
 
 import java.util.List;
 #if($table.tree)
 import java.util.ArrayList;
-import com.ruoyi.common.core.domain.Ztree;
+import com.ruoyi.framework.web.domain.Ztree;
 #end
 #foreach ($column in $columns)
 #if($column.javaField == 'createTime' || $column.javaField == 'updateTime')
@@ -17,12 +17,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import com.ruoyi.common.utils.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
-import ${packageName}.domain.${subClassName};
+import ${packageName}.${businessName}.domain.${subClassName};
 #end
-import ${packageName}.mapper.${ClassName}Mapper;
-import ${packageName}.domain.${ClassName};
-import ${packageName}.service.I${ClassName}Service;
-import com.ruoyi.common.core.text.Convert;
+import ${packageName}.${businessName}.mapper.${ClassName}Mapper;
+import ${packageName}.${businessName}.domain.${ClassName};
+import ${packageName}.${businessName}.service.I${ClassName}Service;
+import com.ruoyi.common.utils.text.Convert;
 
 /**
  * ${functionName}Service业务层处理
@@ -185,7 +185,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
             List<${subClassName}> list = new ArrayList<${subClassName}>();
             for (${subClassName} ${subclassName} : ${subclassName}List)
             {
-                ${subclassName}.set${pkColumn.capJavaField}(${pkColumn.javaField});
+                ${subclassName}.set${subTableFkClassName}(${pkColumn.javaField});
                 list.add(${subclassName});
             }
             if (list.size() > 0)

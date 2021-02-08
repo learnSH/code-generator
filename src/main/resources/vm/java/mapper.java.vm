@@ -1,9 +1,9 @@
-package ${packageName}.mapper;
+package ${packageName}.${businessName}.mapper;
 
 import java.util.List;
-import ${packageName}.domain.${ClassName};
+import ${packageName}.${businessName}.domain.${ClassName};
 #if($table.sub)
-import ${packageName}.domain.${subClassName};
+import ${packageName}.${businessName}.domain.${subClassName};
 #end
 
 /**

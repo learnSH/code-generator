@@ -27,8 +27,10 @@ import com.ricky.framework.web.domain.CxSelect;
 import com.ricky.framework.web.page.TableDataInfo;
 import com.ricky.project.domain.GenTable;
 import com.ricky.project.domain.GenTableColumn;
+import com.ricky.project.domain.SysDataSource;
 import com.ricky.project.service.IGenTableColumnService;
 import com.ricky.project.service.IGenTableService;
+import com.ricky.project.service.ISysDataSourceService;
 
 /**
  * 代码生成 操作处理
@@ -46,7 +48,10 @@ public class GenController extends BaseController
 
     @Autowired
     private IGenTableColumnService genTableColumnService;
-    
+
+    @Autowired
+    private ISysDataSourceService dataSourceService;
+
     @GetMapping()
     public String gen()
     {
@@ -72,8 +77,9 @@ public class GenController extends BaseController
     @ResponseBody
     public TableDataInfo dataList(GenTable genTable)
     {
+        SysDataSource dataSource = dataSourceService.selectSysDataSource(genTable.getDataSourceId());
         startPage();
-        List<GenTable> list = genTableService.selectDbTableList(genTable);
+        List<GenTable> list = genTableService.selectDbTableList(genTable, dataSource);
         return getDataTable(list);
     }
 
@@ -90,14 +96,14 @@ public class GenController extends BaseController
         dataInfo.setTotal(list.size());
         return dataInfo;
     }
-    
+
     /**
      * 导入表结构
      */
     @GetMapping("/importTable/{dataSourceId}")
-    public String importTable(@PathVariable("dataSourceId") Long id,ModelMap mmap)
+    public String importTable(@PathVariable("dataSourceId") Long id, ModelMap mmap)
     {
-    	mmap.put("dataSourceId", id);
+        mmap.put("dataSourceId", id);
         return prefix + "/importTable";
     }
 
@@ -121,25 +127,27 @@ public class GenController extends BaseController
     @GetMapping("/edit/{tableId}")
     public String edit(@PathVariable("tableId") Long tableId, ModelMap mmap)
     {
-    	 GenTable table = genTableService.selectGenTableById(tableId);
-         List<GenTable> genTables = genTableService.selectGenTableAll(table.getDataSourceId());
-         List<CxSelect> cxSelect = new ArrayList<CxSelect>();
-         for (GenTable genTable : genTables)
-         {
-             if (!StringUtils.equals(table.getTableName(), genTable.getTableName()))
-             {
-                 CxSelect cxTable = new CxSelect(genTable.getTableName(), genTable.getTableName() + '：' + genTable.getTableComment());
-                 List<CxSelect> cxColumns = new ArrayList<CxSelect>();
-                 for (GenTableColumn tableColumn : genTable.getColumns())
-                 {
-                     cxColumns.add(new CxSelect(tableColumn.getColumnName(), tableColumn.getColumnName() + '：' + tableColumn.getColumnComment()));
-                 }
-                 cxTable.setS(cxColumns);
-                 cxSelect.add(cxTable);
-             }
-         }
-         mmap.put("table", table);
-         mmap.put("data", JSON.toJSON(cxSelect));
+        GenTable table = genTableService.selectGenTableById(tableId);
+        List<GenTable> genTables = genTableService.selectGenTableAll(table.getDataSourceId());
+        List<CxSelect> cxSelect = new ArrayList<CxSelect>();
+        for (GenTable genTable : genTables)
+        {
+            if (!StringUtils.equals(table.getTableName(), genTable.getTableName()))
+            {
+                CxSelect cxTable = new CxSelect(genTable.getTableName(),
+                        genTable.getTableName() + '：' + genTable.getTableComment());
+                List<CxSelect> cxColumns = new ArrayList<CxSelect>();
+                for (GenTableColumn tableColumn : genTable.getColumns())
+                {
+                    cxColumns.add(new CxSelect(tableColumn.getColumnName(),
+                            tableColumn.getColumnName() + '：' + tableColumn.getColumnComment()));
+                }
+                cxTable.setS(cxColumns);
+                cxSelect.add(cxTable);
+            }
+        }
+        mmap.put("table", table);
+        mmap.put("data", JSON.toJSON(cxSelect));
         return prefix + "/edit";
     }
 
@@ -183,7 +191,7 @@ public class GenController extends BaseController
         byte[] data = genTableService.downloadCode(tableName);
         genCode(response, data);
     }
-    
+
     /**
      * 生成代码（自定义路径）
      */
@@ -205,7 +213,7 @@ public class GenController extends BaseController
         genTableService.synchDb(tableName);
         return AjaxResult.success();
     }
-    
+
     /**
      * 批量生成代码
      */

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ricky.project.domain.GenTable;
+import com.ricky.project.domain.SysDataSource;
 
 /**
  * 业务 服务层
@@ -24,9 +25,10 @@ public interface IGenTableService
      * 查询据库列表
      * 
      * @param genTable	业务信息
+     * @param dataSource 数据源信息
      * @return 数据库表集合
      */
-    public List<GenTable> selectDbTableList(GenTable genTable);
+    public List<GenTable> selectDbTableList(GenTable genTable, SysDataSource dataSource);
 
     /**
      * 查询据库列表

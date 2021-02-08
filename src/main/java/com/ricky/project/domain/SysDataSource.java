@@ -43,6 +43,9 @@ public class SysDataSource extends BaseEntity
     /** 密码 */
     private String password;
     
+    /** 模式 */
+    private String schemaName = "public";
+    
     /** 状态（0正常 1停用） */
     private String status;
 
@@ -118,7 +121,17 @@ public class SysDataSource extends BaseEntity
 		this.password = password;
 	}
 
-	public String getStatus() {
+	public String getSchemaName()
+    {
+        return schemaName;
+    }
+
+    public void setSchemaName(String schemaName)
+    {
+        this.schemaName = schemaName;
+    }
+
+    public String getStatus() {
 		return status;
 	}
 
@@ -138,6 +151,7 @@ public class SysDataSource extends BaseEntity
             .append("port", getPort())
             .append("username", getUsername())
             .append("password", getPassword())
+            .append("schemaName", getSchemaName())
             .append("status", getStatus())
             .toString();
     }

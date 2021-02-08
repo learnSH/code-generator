@@ -39,7 +39,7 @@
 		    var options = {
 		        url: prefix + "/db/list",
 		        queryParams: queryParams,
-		        sortName: "createTime",
+		        sortName: "tableName",
 		        sortOrder: "desc",
 		        showSearch: false,
 		        showRefresh: false,
@@ -61,28 +61,11 @@
 		        {
 		            field: 'tableName',
 		            title: '表名称',
-		            sortable: true,
-		            formatter: function(value, row, index) {
-                    	return $.table.tooltip(value);
-                    }
+		            sortable: true
 		        },
 		        {
 		            field: 'tableComment',
-		            title: '表描述',
-		            sortable: true,
-		            formatter: function(value, row, index) {
-                    	return $.table.tooltip(value);
-                    }
-		        },
-		        {
-		            field: 'createTime',
-		            title: '创建时间',
-		            sortable: true
-		        },
-		        {
-		            field: 'updateTime',
-		            title: '更新时间',
-		            sortable: true
+		            title: '表描述'
 		        }]
 		    };
 		    $.table.init(options);
