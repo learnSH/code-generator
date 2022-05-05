@@ -15,7 +15,7 @@ import com.ricky.framework.config.RuoYiConfig;
 /**
  * 通用请求处理
  * 
- * @author ruoyi
+ * @author shi
  */
 @Controller
 public class CommonController

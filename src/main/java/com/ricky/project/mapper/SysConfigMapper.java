@@ -7,7 +7,7 @@ import com.ricky.project.domain.SysConfig;
 /**
  * 字典表 数据层
  * 
- * @author ruoyi
+ * @author shi
  */
 @Mapper
 public interface SysConfigMapper

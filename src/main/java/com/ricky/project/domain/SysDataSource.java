@@ -10,7 +10,7 @@ import com.ricky.framework.web.domain.BaseEntity;
 /**
  * 系统数据源配置表 sys_config
  * 
- * @author ruoyi
+ * @author shi
  */
 public class SysDataSource extends BaseEntity
 {

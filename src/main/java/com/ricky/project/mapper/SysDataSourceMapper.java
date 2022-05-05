@@ -9,7 +9,7 @@ import com.ricky.project.domain.SysDataSource;
 /**
  * 数据源 数据层
  * 
- * @author ruoyi
+ * @author shi
  */
 @Mapper
 public interface SysDataSourceMapper

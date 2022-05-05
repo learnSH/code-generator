@@ -9,7 +9,7 @@ import com.ricky.project.mapper.SysConfigMapper;
 /**
  * 系统配置 业务层处理
  * 
- * @author ruoyi
+ * @author shi
  */
 @Service
 public class SysConfigServiceImpl implements ISysConfigService

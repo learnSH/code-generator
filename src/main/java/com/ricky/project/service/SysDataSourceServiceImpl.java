@@ -12,7 +12,7 @@ import com.ricky.project.mapper.SysDataSourceMapper;
 /**
  * 系统数据源 业务层处理
  * 
- * @author ruoyi
+ * @author shi
  */
 @Service
 public class SysDataSourceServiceImpl implements ISysDataSourceService

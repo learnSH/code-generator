@@ -9,7 +9,7 @@ import com.ricky.project.domain.DictData;
 /**
  * 字典表 数据层
  * 
- * @author ruoyi
+ * @author shi
  */
 public interface DictDataMapper
 {

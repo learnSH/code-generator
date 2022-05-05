@@ -13,7 +13,7 @@ import com.ricky.project.domain.SysConfig;
 /**
  * 代码生成器 工具类
  * 
- * @author ruoyi
+ * @author shi
  */
 public class GenUtils
 {

@@ -3,7 +3,7 @@ package com.ricky.framework.web.domain;
 /**
  * Tree基类
  * 
- * @author ruoyi
+ * @author shi
  */
 public class TreeEntity extends BaseEntity
 {

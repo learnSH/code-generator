@@ -13,7 +13,7 @@ import com.ricky.framework.interceptor.RepeatSubmitInterceptor;
 /**
  * 通用配置
  * 
- * @author ruoyi
+ * @author shi
  */
 @Configuration
 public class ResourcesConfig implements WebMvcConfigurer

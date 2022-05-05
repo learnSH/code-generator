@@ -17,7 +17,7 @@ import com.ricky.framework.web.domain.AjaxResult;
 /**
  * 全局异常处理器
  * 
- * @author ruoyi
+ * @author shi
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler

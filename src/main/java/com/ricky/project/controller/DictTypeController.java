@@ -23,7 +23,7 @@ import com.ricky.project.service.IDictTypeService;
 /**
  * 数据字典信息
  * 
- * @author ruoyi
+ * @author shi
  */
 @Controller
 @RequestMapping("/system/dict")

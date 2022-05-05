@@ -27,7 +27,7 @@ import com.ricky.project.service.ISysDataSourceService;
 /**
  * 系统数据源信息
  * 
- * @author ruoyi
+ * @author shi
  */
 @Controller
 @RequestMapping("/system/dataSource")

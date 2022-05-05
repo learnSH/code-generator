@@ -9,7 +9,7 @@ import com.ricky.project.domain.DictType;
 /**
  * 字典 业务层
  * 
- * @author ruoyi
+ * @author shi
  */
 public interface IDictTypeService
 {

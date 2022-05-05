@@ -21,7 +21,7 @@ import com.ricky.project.service.IDictDataService;
 /**
  * 数据字典信息
  * 
- * @author ruoyi
+ * @author shi
  */
 @Controller
 @RequestMapping("/system/dict/data")

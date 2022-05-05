@@ -9,7 +9,7 @@ import com.ricky.project.domain.SysDataSource;
 /**
  * 业务 服务层
  * 
- * @author ruoyi
+ * @author shi
  */
 public interface IGenTableService
 {

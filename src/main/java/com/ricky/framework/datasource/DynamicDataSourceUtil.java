@@ -9,7 +9,7 @@ import com.ricky.common.utils.spring.SpringUtils;
 /**
  * 动态数据源工具
  * 
- * @author ruoyi
+ * @author shi
  */
 public class DynamicDataSourceUtil 
 {

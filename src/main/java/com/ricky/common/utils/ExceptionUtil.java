@@ -9,7 +9,7 @@ import com.ricky.common.utils.StringUtils;
 /**
  * 错误信息处理类。
  *
- * @author ruoyi
+ * @author shi
  */
 public class ExceptionUtil
 {

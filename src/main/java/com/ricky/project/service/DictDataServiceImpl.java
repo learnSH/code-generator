@@ -12,7 +12,7 @@ import com.ricky.project.mapper.DictDataMapper;
 /**
  * 字典 业务层处理
  * 
- * @author ruoyi
+ * @author shi
  */
 @Service
 public class DictDataServiceImpl implements IDictDataService

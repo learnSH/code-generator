@@ -35,7 +35,7 @@ import com.ricky.project.service.ISysDataSourceService;
 /**
  * 代码生成 操作处理
  * 
- * @author ruoyi
+ * @author shi
  */
 @Controller
 @RequestMapping("/tool/gen")

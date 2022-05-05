@@ -8,7 +8,7 @@ import com.ricky.common.utils.text.StrFormatter;
 /**
  * 字符串工具类
  * 
- * @author ruoyi
+ * @author shi
  */
 public class StringUtils extends org.apache.commons.lang3.StringUtils
 {

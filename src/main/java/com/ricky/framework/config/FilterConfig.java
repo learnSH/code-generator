@@ -14,7 +14,7 @@ import com.ricky.common.xss.XssFilter;
 /**
  * Filter配置
  *
- * @author ruoyi
+ * @author shi
  */
 @Configuration
 public class FilterConfig

@@ -7,7 +7,7 @@ import com.ricky.project.domain.GenTableColumn;
 /**
  * 业务字段 数据层
  * 
- * @author ruoyi
+ * @author shi
  */
 public interface GenTableColumnMapper
 {

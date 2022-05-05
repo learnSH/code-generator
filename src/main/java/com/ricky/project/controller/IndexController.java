@@ -9,7 +9,7 @@ import com.ricky.framework.web.controller.BaseController;
 /**
  * 首页 业务处理
  * 
- * @author ruoyi
+ * @author shi
  */
 @Controller
 public class IndexController extends BaseController

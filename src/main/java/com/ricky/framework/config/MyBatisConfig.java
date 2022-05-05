@@ -27,7 +27,7 @@ import org.springframework.util.ClassUtils;
 /**
  * Mybatis支持*匹配扫描包
  * 
- * @author ruoyi
+ * @author shi
  */
 @Configuration
 public class MyBatisConfig

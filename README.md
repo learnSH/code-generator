@@ -2,7 +2,6 @@
 
 #### 介绍
 代码生成工具
-抽取自[若依管理系统](https://gitee.com/y_project/RuoYi)代码生成模块，可在本地运行，无需依赖服务器
 
 #### 项目说明
 1. 代码参考若依管理系统
@@ -14,9 +13,6 @@
 #### 注意事项
 1. 代码生成后的sql文件在PostgreSQL下没有生成，需要自己在菜单中添加
 2. 目前导入表功能在SQLServer还没有测试
-
-#### 工具下载
-https://gitee.com/lpf_project/code-generator/releases/v4.6.0
 
 #### 运行说明
 

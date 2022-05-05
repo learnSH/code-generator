@@ -29,7 +29,7 @@ import com.ricky.project.domain.SysDataSource;
 /**
  * druid 配置多数据源
  * 
- * @author ruoyi
+ * @author shi
  */
 @Configuration
 public class DruidConfig {

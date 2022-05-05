@@ -11,7 +11,7 @@ import com.ricky.framework.web.domain.BaseEntity;
 /**
  * 字典数据表 sys_dict_data
  * 
- * @author ruoyi
+ * @author shi
  */
 public class DictData extends BaseEntity
 {

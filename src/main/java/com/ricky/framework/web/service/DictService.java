@@ -12,7 +12,7 @@ import com.ricky.project.service.IDictTypeService;
 /**
  * RuoYi首创 html调用 thymeleaf 实现字典读取
  * 
- * @author ruoyi
+ * @author shi
  */
 @Service("dict")
 public class DictService

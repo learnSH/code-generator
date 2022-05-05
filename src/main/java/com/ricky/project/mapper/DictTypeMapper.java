@@ -7,7 +7,7 @@ import com.ricky.project.domain.DictType;
 /**
  * 字典表 数据层
  * 
- * @author ruoyi
+ * @author shi
  */
 public interface DictTypeMapper
 {

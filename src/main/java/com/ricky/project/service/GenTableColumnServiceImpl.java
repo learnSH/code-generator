@@ -12,7 +12,7 @@ import com.ricky.project.mapper.GenTableColumnMapper;
 /**
  * 业务字段 服务层实现
  * 
- * @author ruoyi
+ * @author shi
  */
 @Service
 public class GenTableColumnServiceImpl implements IGenTableColumnService 

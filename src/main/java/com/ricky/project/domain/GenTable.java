@@ -14,7 +14,7 @@ import com.ricky.framework.web.domain.BaseEntity;
 /**
  * 业务表 gen_table
  * 
- * @author ruoyi
+ * @author shi
  */
 public class GenTable extends BaseEntity
 {

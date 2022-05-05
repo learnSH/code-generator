@@ -5,7 +5,7 @@ import com.ricky.project.domain.SysConfig;
 /**
  * 系统配置 业务层
  * 
- * @author ruoyi
+ * @author shi
  */
 public interface ISysConfigService
 {

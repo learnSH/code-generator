@@ -7,7 +7,7 @@ import com.ricky.project.domain.SysDataSource;
 /**
  * 系统数据源 业务层
  * 
- * @author ruoyi
+ * @author shi
  */
 public interface ISysDataSourceService
 {

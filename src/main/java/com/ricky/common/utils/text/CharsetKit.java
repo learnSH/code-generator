@@ -8,7 +8,7 @@ import com.ricky.common.utils.StringUtils;
 /**
  * 字符集工具类
  * 
- * @author ruoyi
+ * @author shi
  *
  */
 public class CharsetKit

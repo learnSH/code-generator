@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 文件处理工具类
  * 
- * @author ruoyi
+ * @author shi
  */
 public class FileUtils extends org.apache.commons.io.FileUtils
 {

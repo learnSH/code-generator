@@ -7,7 +7,7 @@ import com.ricky.project.domain.DictData;
 /**
  * 字典 业务层
  * 
- * @author ruoyi
+ * @author shi
  */
 public interface IDictDataService
 {

@@ -5,7 +5,7 @@ import com.ricky.common.utils.StringUtils;
 /**
  * sql操作工具类
  * 
- * @author ruoyi
+ * @author shi
  */
 public class SqlUtil
 {

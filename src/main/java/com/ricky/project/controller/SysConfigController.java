@@ -16,7 +16,7 @@ import com.ricky.project.service.ISysConfigService;
 /**
  * 系统配置信息
  * 
- * @author ruoyi
+ * @author shi
  */
 @Controller
 @RequestMapping("/system/config")

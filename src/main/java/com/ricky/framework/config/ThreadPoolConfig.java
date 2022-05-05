@@ -13,7 +13,7 @@ import com.ricky.common.utils.Threads;
 /**
  * 线程池配置
  *
- * @author ruoyi
+ * @author shi
  **/
 @Configuration
 public class ThreadPoolConfig

@@ -8,7 +8,7 @@ import com.ricky.framework.web.domain.BaseEntity;
 /**
  * 系统配置表 sys_config
  * 
- * @author ruoyi
+ * @author shi
  */
 public class SysConfig extends BaseEntity
 {

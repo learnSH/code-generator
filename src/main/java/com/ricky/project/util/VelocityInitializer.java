@@ -9,7 +9,7 @@ import com.ricky.common.constant.Constants;
 /**
  * VelocityEngine工厂
  * 
- * @author ruoyi
+ * @author shi
  */
 public class VelocityInitializer
 {

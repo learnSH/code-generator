@@ -48,7 +48,7 @@ import com.ricky.project.util.VelocityUtils;
 /**
  * 业务 服务层实现
  * 
- * @author ruoyi
+ * @author shi
  */
 @Service
 public class GenTableServiceImpl implements IGenTableService
